@@ -32,8 +32,12 @@ type MongoUserStore struct {
 
 func (s *MongoUserStore) GetById(ctx context.Context, id string) (*types.User, error) {
 	var foundUser types.User
-	err := s.coll.FindOne(ctx, bson.M{"_id": ToObjectId(id)}).Decode(&foundUser)
+	oid, err := ToObjectId(id)
+	if err != nil {
+		return nil, err
+	}
 
+	err = s.coll.FindOne(ctx, bson.M{"_id": oid}).Decode(&foundUser)
 	if err != nil {
 		return nil, err
 	}

@@ -8,11 +8,11 @@ func GetDBName() string {
 	return DBNAME
 }
 
-func ToObjectId(id string) primitive.ObjectID {
+func ToObjectId(id string) (primitive.ObjectID, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return primitive.NilObjectID
+		return primitive.NilObjectID, err
 	}
 
-	return oid
+	return oid, nil
 }

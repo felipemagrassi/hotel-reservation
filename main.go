@@ -30,7 +30,13 @@ func main() {
 	mongoStore := db.NewMongoUserStore(client)
 	userHandler := api.NewUserHandler(mongoStore)
 
-	app := fiber.New()
+	app := fiber.New(
+		fiber.Config{
+			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+				return ctx.JSON(map[string]string{"error": err.Error()})
+			},
+		},
+	)
 
 	appApi := app.Group("/api")
 	appApiV1 := appApi.Group("/v1")
