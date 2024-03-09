@@ -44,6 +44,9 @@ func main() {
 	appApiV1User := appApiV1.Group("/user")
 	appApiV1User.Get("/", userHandler.HandleGetUsers)
 	appApiV1User.Get(":id", userHandler.HandleGetUser)
+	appApiV1User.Post("/", userHandler.HandleCreateUser)
+	appApiV1User.Put(":id", userHandler.HandleEditUser)
+	appApiV1User.Delete(":id", userHandler.HandleDeleteUser)
 
 	app.Listen(*listenAddr)
 }
