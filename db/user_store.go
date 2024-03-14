@@ -5,6 +5,7 @@ import (
 
 	"github.com/felipemagrassi/hotel-reservation/types"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -15,7 +16,7 @@ var (
 type UserStore interface {
 	GetById(context.Context, string) (*types.User, error)
 	List(context.Context) ([]*types.User, error)
-	Create(context.Context, *types.User) error
+	Create(context.Context, *types.User) (string, error)
 	Update(context.Context, *types.User) error
 	Delete(context.Context, string) error
 }
@@ -73,13 +74,13 @@ func (s *MongoUserStore) List(ctx context.Context) ([]*types.User, error) {
 	return foundUsers, nil
 }
 
-func (s *MongoUserStore) Create(ctx context.Context, user *types.User) error {
-	_, err := s.coll.InsertOne(ctx, user)
+func (s *MongoUserStore) Create(ctx context.Context, user *types.User) (string, error) {
+	res, err := s.coll.InsertOne(ctx, user)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return FromObjectId(res.InsertedID.(primitive.ObjectID)), nil
 }
 
 func (s *MongoUserStore) Update(ctx context.Context, user *types.User) error {

@@ -6,6 +6,10 @@ build:
 run: build
 	@./bin/api
 
+.PHONY: seed
+seed: 
+	@go run scripts/seed.go
+
 .PHONY: test
 test:
 	@go test -v ./...

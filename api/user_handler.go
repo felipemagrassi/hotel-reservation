@@ -90,10 +90,12 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = h.userStore.Create(c.Context(), user)
+	id, err := h.userStore.Create(c.Context(), user)
 	if err != nil {
 		return err
 	}
+
+	user.ID = id
 
 	return c.JSON(user)
 }

@@ -2,7 +2,11 @@ package db
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-const DBNAME = "hotel-reservation"
+const (
+	DBNAME = "hotel-reservation"
+	TESTDB = "test-hotel-reservation"
+	DBURI  = "mongodb://localhost:27017"
+)
 
 func GetDBName() string {
 	return DBNAME
@@ -15,4 +19,8 @@ func ToObjectId(id string) (primitive.ObjectID, error) {
 	}
 
 	return oid, nil
+}
+
+func FromObjectId(oid primitive.ObjectID) string {
+	return oid.Hex()
 }

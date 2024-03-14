@@ -12,17 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	dbrui = "mongodb://localhost:27017"
-)
-
 func main() {
 	ctx := context.Background()
 
 	listenAddr := flag.String("listenAddr", ":3000", "The address to listen on")
 	flag.Parse()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbrui))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(db.DBURI))
 	if err != nil {
 		log.Fatal(err)
 	}
