@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/felipemagrassi/hotel-reservation/db"
 	"github.com/felipemagrassi/hotel-reservation/types"
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +23,10 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 	user, err := h.userStore.GetById(c.Context(), id)
 
 	if err != nil {
+		if err == db.ErrNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(map[string]string{"error": "user not found"})
+		}
+
 		return err
 	}
 
@@ -40,6 +46,7 @@ func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
 func (h *UserHandler) HandleDeleteUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.userStore.Delete(c.Context(), id); err != nil {
+		fmt.Printf("Error deleting user: %s", err)
 		return err
 	}
 

@@ -5,6 +5,7 @@ type Hotel struct {
 	Name     string   `json:"name" bson:"name"`
 	Location string   `json:"location" bson:"location"`
 	Rooms    []string `json:"rooms" bson:"rooms"`
+	Rating   float64  `json:"rating" bson:"rating"`
 }
 
 type RoomType int

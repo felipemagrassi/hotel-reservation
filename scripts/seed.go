@@ -17,12 +17,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	seedHotel(ctx, client, "Hotel A", "Location A")
+	seedHotel(ctx, client, "Hotel B", "Location B")
+	seedHotel(ctx, client, "Hotel C", "Location C")
+}
+
+func seedHotel(ctx context.Context, client *mongo.Client, name, location string) {
 	hotelStore := db.NewMongoHotelStore(client)
 	roomStore := db.NewMongoRoomStore(client, hotelStore)
 
 	hotel := types.Hotel{
-		Name:     "Bellucia",
-		Location: "France",
+		Name:     name,
+		Location: location,
+		Rooms:    []string{},
 	}
 
 	insertedHotelID, err := hotelStore.InsertHotel(ctx, &hotel)

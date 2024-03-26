@@ -1,12 +1,17 @@
 package db
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 const (
 	DBNAME = "hotel-reservation"
 	TESTDB = "test-hotel-reservation"
 	DBURI  = "mongodb://localhost:27017"
 )
+
+type Pagination struct {
+}
 
 func GetDBName() string {
 	return DBNAME

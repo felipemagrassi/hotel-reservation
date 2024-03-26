@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/felipemagrassi/hotel-reservation/types"
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,7 +12,7 @@ import (
 
 type HotelStore interface {
 	InsertHotel(context.Context, *types.Hotel) (string, error)
-	Update(ctx context.Context, hotel *types.Hotel) error
+	InsertRoom(ctx context.Context, room *types.Room) error
 }
 
 type MongoHotelStore struct {
@@ -35,13 +36,56 @@ func (s *MongoHotelStore) InsertHotel(ctx context.Context, hotel *types.Hotel) (
 	return FromObjectId(res.InsertedID.(primitive.ObjectID)), nil
 }
 
-func (s *MongoHotelStore) UpdateRoom(ctx context.Context, hotel *types.Hotel) error {
-	oid, err := ToObjectId(hotel.ID)
+func (s *MongoHotelStore) GetHoteL(ctx context.Context, id string) (*types.Hotel, error) {
+	oid, err := ToObjectId(id)
+	if err != nil {
+		return nil, err
+	}
+
+	var hotel types.Hotel
+
+	err = s.collection.FindOne(ctx, bson.M{"_id": oid}).Decode(&hotel)
+	if err != nil {
+		return nil, err
+	}
+
+	return &hotel, nil
+}
+
+func (s *MongoHotelStore) ListHotels(ctx context.Context) ([]*types.Hotel, error) {
+	cursor, err := s.collection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	var hotels []*types.Hotel
+	if err = cursor.All(ctx, &hotels); err != nil {
+		return nil, err
+	}
+	return hotels, nil
+}
+
+func (s *MongoHotelStore) InsertRoom(ctx context.Context, room *types.Room) error {
+	if room.HotelID == "" {
+		return errors.New("Room hotelID is required")
+	}
+
+	hotelOid, err := ToObjectId(room.HotelID)
 	if err != nil {
 		return err
 	}
 
-	filter := primitive.M{"_id": oid}
-	params := primitive.M{"$push": bson.M{"rooms": hotel.Rooms}}
+	filter := bson.M{"_id": hotelOid}
+	update := bson.M{"$push": bson.M{"rooms": room.ID}}
+
+	res, err := s.collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+
+	if res.ModifiedCount == 0 {
+		return errors.New("hotel not found")
+	}
+
+	return nil
 
 }

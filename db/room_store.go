@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/felipemagrassi/hotel-reservation/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -31,6 +32,16 @@ func (s *MongoRoomStore) InsertRoom(ctx context.Context, room *types.Room) (stri
 	res, err := s.collection.InsertOne(ctx, room)
 	if err != nil {
 		panic(err)
+	}
+
+	if res.InsertedID == nil {
+		return "", errors.New("failed to insert room")
+	}
+
+	room.ID = FromObjectId(res.InsertedID.(primitive.ObjectID))
+
+	if err := s.HotelStore.InsertRoom(ctx, room); err != nil {
+		return "", err
 	}
 
 	return FromObjectId(res.InsertedID.(primitive.ObjectID)), nil
