@@ -22,19 +22,22 @@ func NewHotelHandler(hotelStore db.HotelStore, roomStore db.RoomStore) *HotelHan
 	}
 }
 
-func (h *HotelHandler) HandleGetHotels(c *fiber.Ctx) error {
-	var params HotelQueryParams
-
-	if err := c.QueryParser(&params); err != nil {
-		return ErrBadRequest()
+func (h *HotelHandler) HandleListHotels(c *fiber.Ctx) error {
+	hotels, err := h.hotelStore.ListHotels(c.Context())
+	if err != nil {
+		return err
 	}
 
+	return c.JSON(hotels)
 }
 
-func (h *HotelHandler) HandleGetHotel() {
-	// TODO
-}
+func (h *HotelHandler) HandleGetHotel(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-func (h *HotelHandler) HandleCreateRoom() {
-	// TODO
+	hotel, err := h.hotelStore.GetHotel(c.Context(), id)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(hotel)
 }

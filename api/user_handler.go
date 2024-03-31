@@ -58,15 +58,18 @@ func (h *UserHandler) HandleEditUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	if err := c.BodyParser(&dto); err != nil {
+		fmt.Println("1")
 		return err
 	}
 
 	if errs, ok := dto.Validate(); !ok {
+		fmt.Println("2")
 		return c.Status(fiber.StatusBadRequest).JSON(errs)
 	}
 
 	user, err := types.NewUserUpdateDTO(dto)
 	if err != nil {
+		fmt.Println("3")
 		return err
 	}
 
@@ -74,6 +77,7 @@ func (h *UserHandler) HandleEditUser(c *fiber.Ctx) error {
 
 	err = h.userStore.Update(c.Context(), user)
 	if err != nil {
+		fmt.Println("4")
 		return err
 	}
 
@@ -84,21 +88,25 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	var dto types.UserDTO
 
 	if err := c.BodyParser(&dto); err != nil {
+		fmt.Println("error parsing body")
 		return err
 	}
 
 	errs, ok := dto.Validate()
 	if !ok {
+		fmt.Println("error validating dto")
 		return c.Status(fiber.StatusBadRequest).JSON(errs)
 	}
 
 	user, err := types.NewUserCreateDTO(dto)
 	if err != nil {
+		fmt.Println("error creating dto")
 		return err
 	}
 
 	id, err := h.userStore.Create(c.Context(), user)
 	if err != nil {
+		fmt.Println("error persisting")
 		return err
 	}
 

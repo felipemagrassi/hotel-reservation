@@ -10,7 +10,11 @@ const (
 	DBURI  = "mongodb://localhost:27017"
 )
 
+type Map map[string]any
+
 type Pagination struct {
+	Limit int64
+	Page  int64
 }
 
 func GetDBName() string {

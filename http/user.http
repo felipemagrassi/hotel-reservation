@@ -1,0 +1,40 @@
+POST {{base_url}}/api/v1/users
+content-type: application/json
+X-Api-Token: 123
+
+{
+	"firstName": "Felipe",
+	"lastName": "Magrassi",
+	"email": "felipe.1magrassi@gmail.com",
+	"password": "123456"
+}
+
+###
+
+GET {{base_url}}/api/v1/users
+Accept: application-json
+X-Api-Token: 123
+
+###
+
+GET {{base_url}}/api/v1/users/660983afd3069b0b1f90f06c
+Accept: application/json
+X-Api-Token: 1234
+
+### 
+
+PUT {{base_url}}/api/v1/users/660983afd3069b0b1f90f06c
+content-type: application/json
+X-Api-Token: 1234
+
+{
+	"firstName": "Felipe",
+	"lastName": "Magrassi",
+	"email": "felipe.2magrassi@gmail.com"
+}
+
+###
+
+DELETE {{base_url}}/api/v1/users/660983afd3069b0b1f90f06c
+Accept: application/json
+X-Api-Token: 1234

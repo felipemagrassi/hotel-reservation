@@ -55,9 +55,6 @@ func (dto UserDTO) Validate() (map[string]string, bool) {
 	if err := isEmailValid(dto.Email); err != nil {
 		errors["email"] = err.Error()
 	}
-	if len(dto.Password) == 0 {
-		errors["password"] = "missing password"
-	}
 	return errors, len(errors) == 0
 }
 

@@ -1,0 +1,11 @@
+GET {{base_url}}/api/v1/hotels
+Accept: application/json
+X-Api-Token: 123
+
+###
+
+GET {{base_url}}/api/v1/hotels/66098c1f6ef0504f78af24cf
+Accept: application/json
+X-Api-Token: 123
+
+###
