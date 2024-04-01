@@ -53,6 +53,7 @@ func main() {
 	userv1.Delete(":id", userHandler.HandleDeleteUser)
 
 	hotelv1.Get("/", hotelHandler.HandleListHotels)
+	hotelv1.Get(":id", hotelHandler.HandleGetHotel)
 
 	app.Listen(*listenAddr)
 }
